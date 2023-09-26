@@ -1,0 +1,15 @@
+[workspace]
+members = [
+    "app",
+    "common",
+    "test-brotli",
+    "test-snappy",
+    "test-gzip",
+    "test-zstd",
+]
+
+[workspace.dependencies]
+anyhow = "1"
+humansize = "2.1"
+log = "0.4"
+tokio = "1"

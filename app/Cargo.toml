@@ -1,0 +1,25 @@
+[package]
+name = "app"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = { workspace = true }
+common = { path = "../common" }
+clap = { version = "4", features = ["derive"] }
+log = { workspace = true }
+env_logger = "0.10"
+test-brotli = { path = "../test-brotli" }
+test-snappy = { path = "../test-snappy" }
+test-gzip = { path = "../test-gzip" }
+test-zstd = { path = "../test-zstd" }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "fs", "io-util"] }
+
+[dev-dependencies]
+criterion = "0.4"
+
+[[bench]]
+name = "benchmark"
+harness = false
