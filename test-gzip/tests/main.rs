@@ -7,8 +7,8 @@ fn gzip_works() -> Result<()> {
     origin.insert("b".to_string(), b"abcdefg".to_vec());
     origin.insert("c".to_string(), b"abcdefg".to_vec());
 
-    let archive = test_gzip::compress(&origin)?;
-    let extracted = test_gzip::decompress(&archive)?;
+    let compressed = test_gzip::compress(&origin)?;
+    let extracted = test_gzip::decompress(&compressed)?;
     assert_eq!(origin, extracted);
 
     Ok(())

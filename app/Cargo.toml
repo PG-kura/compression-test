@@ -9,17 +9,26 @@ edition = "2021"
 anyhow = { workspace = true }
 common = { path = "../common" }
 clap = { version = "4", features = ["derive"] }
-log = { workspace = true }
+log = "0.4"
 env_logger = "0.10"
-test-brotli = { path = "../test-brotli" }
+humansize = { workspace = true }
+rayon = { workspace = true }
+tempdir = "0.3"
 test-snappy = { path = "../test-snappy" }
 test-gzip = { path = "../test-gzip" }
+test-tar = { path = "../test-tar" }
+test-zip_br = { path = "../test-zip_br" }
 test-zstd = { path = "../test-zstd" }
-tokio = { workspace = true, features = ["macros", "rt-multi-thread", "fs", "io-util"] }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "fs", "io-util", "sync"] }
 
 [dev-dependencies]
-criterion = "0.4"
+criterion = { version = "0.5", features = ["async_tokio", "async_futures"] }
+futures = { version = "0.3", default_features = false, features = ["executor"] }
 
 [[bench]]
-name = "benchmark"
+name = "compression"
+harness = false
+
+[[bench]]
+name = "archive"
 harness = false

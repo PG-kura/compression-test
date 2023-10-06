@@ -1,7 +1,7 @@
 use anyhow::Result;
 use std::io::{self, Read};
 
-pub fn compress(input: &common::Origin) -> Result<common::Archive> {
+pub fn compress(input: &common::Origin) -> Result<common::Compressed> {
     let mut header = common::Header::default();
     let mut encoder = zstd::stream::write::Encoder::new(Vec::new(), 0)?;
 
@@ -12,14 +12,14 @@ pub fn compress(input: &common::Origin) -> Result<common::Archive> {
     }
 
     let buffer = encoder.finish()?;
-    let archive = common::Archive { buffer, header };
-    Ok(archive)
+    let compressed = common::Compressed { buffer, header };
+    Ok(compressed)
 }
 
-pub fn decompress(archive: &common::Archive) -> Result<common::Origin> {
+pub fn decompress(compressed: &common::Compressed) -> Result<common::Origin> {
     let mut origin = common::Origin::default();
-    let mut decoder = zstd::stream::read::Decoder::new(io::Cursor::new(&archive.buffer))?;
-    for (name, size) in archive.header.iter() {
+    let mut decoder = zstd::stream::read::Decoder::new(io::Cursor::new(&compressed.buffer))?;
+    for (name, size) in compressed.header.iter() {
         let mut buf = vec![0; *size];
         decoder.read_exact(&mut buf)?;
         origin.insert(name.clone(), buf);

@@ -1,0 +1,17 @@
+[package]
+name = "test-zip_br"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = { workspace = true }
+brotli = "3"
+bytes = "1"
+common = { path = "../common" }
+futures = "0.3"
+zip = "0.6"
+tokio = { workspace = true, features = ["fs", "sync"] }
+tokio-util = { version = "0.7", features = ["codec"] }
+rayon = { workspace = true }

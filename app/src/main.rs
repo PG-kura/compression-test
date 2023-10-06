@@ -1,26 +1,37 @@
 use anyhow::Result;
 use app::load_all;
+use common::Sized;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     env_logger::init();
 
-    log::info!("Read data...");
     let origin = load_all("data").await?;
-    log::info!("Origin size: {}", &origin);
+    log::info!("Origin size: {}", get_size_s(origin.len()));
 
-    let write_log = |label, archive: common::Archive| {
-        let org_len = origin.amount_size() as f64;
-        let pct = 100.0 * archive.len() as f64 / org_len;
-        log::info!("{label} {archive}({:.2}%)", pct);
-    };
+    let archive = test_tar::archive(origin.clone(), "/tmp/test.tar").await?;
+    write_log("(br.)tar", &origin, archive);
+    let archive = test_zip_br::archive(origin.clone(), "/tmp/test.zip.br").await?;
+    write_log("zip.br", &origin, archive);
 
-    let archive = test_gzip::compress(&origin)?;
-    write_log("gzip", archive);
-    let archive = test_snappy::compress(&origin)?;
-    write_log("snappy", archive);
-    let archive = test_zstd::compress(&origin)?;
-    write_log("zstd", archive);
+    let compressed = test_gzip::compress(&origin)?;
+    write_log("gzip", &origin, compressed);
+    let compressed = test_snappy::compress(&origin)?;
+    write_log("snappy", &origin, compressed);
+    let compressed = test_zstd::compress(&origin)?;
+    write_log("zstd", &origin, compressed);
 
     Ok(())
+}
+
+fn write_log<S: common::Sized>(label: &str, origin: &common::Origin, obj: S) {
+    let len = obj.len();
+    let len_s = get_size_s(len);
+    let org_len = origin.amount_size() as f64;
+    let pct = 100.0 * len as f64 / org_len;
+    log::info!("{label} {len_s}({:.2}%)", pct);
+}
+
+fn get_size_s(len: usize) -> String {
+    humansize::format_size(len, humansize::DECIMAL)
 }
