@@ -3,7 +3,7 @@ use brotli::{enc::writer::CompressorWriter, Decompressor};
 use std::fs;
 use std::io::{Cursor, Read, Write};
 use std::path::Path;
-use zip::{write::FileOptions, CompressionMethod, ZipArchive, ZipWriter};
+use zip::{write::FileOptions, ZipArchive, ZipWriter};
 
 pub async fn archive<P>(input: common::Origin, path: P) -> Result<common::Archive>
 where
@@ -12,7 +12,7 @@ where
     let mut zip_buff = vec![];
     let mut cursor = Cursor::new(&mut zip_buff);
     let mut zip = ZipWriter::new(&mut cursor);
-    let options = FileOptions::default().compression_method(CompressionMethod::Stored);
+    let options = FileOptions::default();
 
     for (name, value) in input.files {
         zip.start_file(name, options).unwrap();

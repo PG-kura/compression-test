@@ -13,14 +13,14 @@ async fn main() -> Result<()> {
     write_log("(br.)tar", &origin, archive);
     let archive = test_zip_br::archive(origin.clone(), "/tmp/test.zip.br").await?;
     write_log("zip.br", &origin, archive);
-
+/*
     let compressed = test_gzip::compress(&origin)?;
     write_log("gzip", &origin, compressed);
     let compressed = test_snappy::compress(&origin)?;
     write_log("snappy", &origin, compressed);
     let compressed = test_zstd::compress(&origin)?;
     write_log("zstd", &origin, compressed);
-
+*/
     Ok(())
 }
 
