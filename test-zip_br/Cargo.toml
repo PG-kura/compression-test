@@ -7,10 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
-brotli = "3"
 bytes = "1"
 common = { path = "../common" }
-futures = "0.3"
-zip = { version = "0.6", default-features = false }
-tokio = { workspace = true, features = ["fs", "sync"] }
-tokio-util = { version = "0.7", features = ["codec"] }
+zip = { workspace = true }
+brotli = "3"

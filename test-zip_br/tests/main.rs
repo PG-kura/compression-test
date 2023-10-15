@@ -1,14 +1,15 @@
 use anyhow::Result;
+use test_zip_br::*;
 
-#[tokio::test]
-async fn zip_works() -> Result<()> {
+#[test]
+fn zip_works() -> Result<()> {
     let mut origin = common::Origin::default();
     origin.insert("a".to_string(), b"abcdefg".to_vec());
     origin.insert("b".to_string(), b"abcdefg".to_vec());
     origin.insert("c".to_string(), b"abcdefg".to_vec());
 
-    let archive = test_zip_br::archive(origin.clone(), "/tmp/test.tar").await?;
-    let extracted = test_zip_br::extract(archive)?;
+    let archive = archive(origin.clone(), "/tmp/test.tar", 3)?;
+    let extracted = extract(archive)?;
     assert_eq!(origin, extracted);
 
     Ok(())

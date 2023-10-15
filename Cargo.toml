@@ -2,15 +2,16 @@
 members = [
     "app",
     "common",
-    "test-tar",
-    "test-snappy",
-    "test-gzip",
-    "test-zstd",
     "test-zip_br",
+    "test-zip_gzip",
+    "test-zip_snappy",
+    "test-zip_zstd",
 ]
+resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1"
 humansize = "2.1"
 rayon = "1"
 tokio = "1"
+zip = { version = "0.6", default-features = false }

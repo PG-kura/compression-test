@@ -1,5 +1,5 @@
 [package]
-name = "test-gzip"
+name = "test-zip_zstd"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,5 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
+bytes = "1"
 common = { path = "../common" }
-flate2 = "1"
+zip = { workspace = true }
+zstd = "0.12"

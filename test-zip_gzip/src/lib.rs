@@ -1,11 +1,11 @@
 use anyhow::Result;
-use brotli::{enc::writer::CompressorWriter, Decompressor};
 use std::fs;
 use std::io::{Cursor, Read, Write};
 use std::path::Path;
 use zip::{write::FileOptions, ZipArchive, ZipWriter};
+use flate2::{read::GzDecoder, write::GzEncoder, Compression};
 
-pub fn archive<P>(input: common::Origin, path: P, quality: u32) -> Result<common::Archive>
+pub fn archive<P>(input: common::Origin, path: P, level: u32) -> Result<common::Archive>
 where
     P: AsRef<Path>,
 {
@@ -22,11 +22,13 @@ where
     zip.finish()?;
     drop(zip);
 
-    let br_file = fs::File::create(&path)?;
-    let mut write = CompressorWriter::new(br_file, 4096, quality, 22);
-    write.write_all(&zip_buff).unwrap();
-    let br_file = write.into_inner();
-    drop(br_file);
+    // IO は余計だが、tar 側と合わせるためにファイルに書き出す。
+    // tar 側は出力先をファイル以外にすることが出来ないので、zip 側が合わせてやる必要がある。
+    // また、想定する用途ではファイルに書き出すことが求められる。
+    let gzip_file = fs::File::create(&path).unwrap();
+    let mut encoder = GzEncoder::new(gzip_file, Compression::new(level));
+    encoder.write_all(&zip_buff)?;
+    encoder.finish()?;
 
     let size = fs::metadata(&path).unwrap().len();
     let archive = common::Archive {
@@ -37,11 +39,11 @@ where
 }
 
 pub fn extract(archive: common::Archive) -> Result<common::Origin> {
-    let br_file = fs::File::open(archive.path).unwrap();
-    let mut decompressor = Decompressor::new(br_file, 4096);
+    let gzip_file = fs::File::open(archive.path).unwrap();
+    let mut decoder = GzDecoder::new(gzip_file);
     let mut zip_buff = vec![];
-    decompressor.read_to_end(&mut zip_buff).unwrap();
-    drop(decompressor);
+    decoder.read_to_end(&mut zip_buff)?;
+    drop(decoder);
 
     let mut origin = common::Origin::default();
     let mut cursor = Cursor::new(&zip_buff);

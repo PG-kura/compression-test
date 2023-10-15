@@ -1,5 +1,5 @@
 [package]
-name = "test-tar"
+name = "test-zip_snappy"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,11 +7,7 @@ edition = "2021"
 
 [dependencies]
 anyhow = { workspace = true }
-brotli = "3"
 bytes = "1"
 common = { path = "../common" }
-futures = "0.3"
-tar = "0.4"
-tokio = { workspace = true, features = ["fs", "sync"] }
-tokio-util = { version = "0.7", features = ["codec"] }
-rayon = { workspace = true }
+zip = { workspace = true }
+snap = "1.1.0"

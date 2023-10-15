@@ -8,17 +8,14 @@ edition = "2021"
 [dependencies]
 anyhow = { workspace = true }
 common = { path = "../common" }
-clap = { version = "4", features = ["derive"] }
 log = "0.4"
 env_logger = "0.10"
-humansize = { workspace = true }
 rayon = { workspace = true }
 tempdir = "0.3"
-test-snappy = { path = "../test-snappy" }
-test-gzip = { path = "../test-gzip" }
-test-tar = { path = "../test-tar" }
 test-zip_br = { path = "../test-zip_br" }
-test-zstd = { path = "../test-zstd" }
+test-zip_gzip = { path = "../test-zip_gzip" }
+test-zip_snappy = { path = "../test-zip_snappy" }
+test-zip_zstd = { path = "../test-zip_zstd" }
 tokio = { workspace = true, features = ["macros", "rt-multi-thread", "fs", "io-util", "sync"] }
 
 [dev-dependencies]
@@ -26,9 +23,17 @@ criterion = { version = "0.5", features = ["async_tokio", "async_futures"] }
 futures = { version = "0.3", default_features = false, features = ["executor"] }
 
 [[bench]]
-name = "compression"
+name = "zip_br"
 harness = false
 
 [[bench]]
-name = "archive"
+name = "zip_gzip"
+harness = false
+
+[[bench]]
+name = "zip_snappy"
+harness = false
+
+[[bench]]
+name = "zip_zstd"
 harness = false
